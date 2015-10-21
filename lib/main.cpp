@@ -17,11 +17,22 @@ struct Proc : Process<Prot> {
 
   void routine() {
     if(proto.pid == 0) {
-      proto.m1.send(1, 42);
+      int tab[4] = {1, 2, 3, 4};
+      //      cout << "tialle" << sizeof(tab) << endl;
+      int a = 43;
+      proto.m1.send_array(1, tab, 4);
+      for(int i = 0; i < 4; i++) {
+	cout << tab[i] << endl;
+      }
+      //cout << "Envoie : " << a << endl;
     } else {
-      int a = 2;
-      proto.m1.recv(0, &a);
-      cout << a << endl;
+      int b = 2;
+      int t[4];
+      proto.m1.recv_array(0, t, 4);
+      //      cout << "Reception : " << b << endl;
+      for(int i = 0; i < 4; i++) {
+	cout << t[i] << endl;
+      }
     }
   }
 };
