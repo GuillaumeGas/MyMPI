@@ -2,9 +2,9 @@
 
 namespace mmpi {
   struct Protocol {
-    Protocol(int id, int nprocs) : id(id), nprocs(nprocs) {}
+    Protocol(int pid, int nprocs) : pid(pid), nprocs(nprocs) {}
     
-    int id;
+    int pid;
     int nprocs;
   };
 };
