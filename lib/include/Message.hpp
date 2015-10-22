@@ -3,6 +3,7 @@
 #include <mpi.h>
 #include "ez_base.hpp"
 #include "ez_vector.hpp"
+#include "ez_string.hpp"
 
 namespace mmpi {
   template <int TAG, typename A>
