@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "include/Admin.hpp"
 #include "include/Protocol.hpp"
 #include "include/Process.hpp"
@@ -10,6 +11,8 @@ using namespace mmpi;
 struct Prot : Protocol {
   Prot(int pid, int nprocs) : Protocol(pid, nprocs) {}
   Message<0, int> m1;
+  Message<1, char> m2;
+  Message<2, vector<int> > m3;
 };
 
 struct Proc : Process<Prot> {
@@ -17,22 +20,23 @@ struct Proc : Process<Prot> {
 
   void routine() {
     if(proto.pid == 0) {
-      int tab[4] = {1, 2, 3, 4};
-      //      cout << "tialle" << sizeof(tab) << endl;
       int a = 43;
-      proto.m1.send_array(1, tab, 4);
-      for(int i = 0; i < 4; i++) {
-	cout << tab[i] << endl;
-      }
-      //cout << "Envoie : " << a << endl;
+      int tab[4] = {1, 2, 3, 4};
+      char tab2[3] = {'a', 'b'};
+      vector<int> vec = {1, 2, 3, 4};
+      
+      proto.m1.send(1, a).send(1, a);
+      
     } else {
       int b = 2;
       int t[4];
-      proto.m1.recv_array(0, t, 4);
-      //      cout << "Reception : " << b << endl;
-      for(int i = 0; i < 4; i++) {
-	cout << t[i] << endl;
-      }
+      char t2[2];
+      string str;
+      vector<int> vec_res;
+
+      int a,c;
+      proto.m1.recv(0,a).recv(0,c);
+      cout << "a = " << a <<", c= " << c << endl;
     }
   }
 };

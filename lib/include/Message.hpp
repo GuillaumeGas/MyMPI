@@ -1,30 +1,36 @@
 #pragma once
 
 #include <mpi.h>
+#include "ez_base.hpp"
+#include "ez_vector.hpp"
 
 namespace mmpi {
-  template <int N, typename A>
+  template <int TAG, typename A>
   struct Message {
     Message() {}
 
-    void send(int pid_proc, A data) {
-      MPI_Send(&data, sizeof(A), MPI_BYTE, pid_proc, N, MPI_COMM_WORLD);
+    Message& send(int pid_proc, A & data) {
+      ez_send(pid_proc, data, TAG, m_comm);
+      return *this;
     }
 
-    void recv(int pid_proc, A* buffer) {
-      MPI_Recv(buffer, sizeof(A), MPI_BYTE, pid_proc, N, MPI_COMM_WORLD, &m_status);
+    Message& recv(int pid_proc, A & buffer) {
+      ez_recv(pid_proc, buffer, TAG, m_comm, m_status);
+      return *this;
     }
 
-    void send_array(int pid_proc, A* data, int size) {
-      MPI_Send(data, size*sizeof(A), MPI_BYTE, pid_proc, N, MPI_COMM_WORLD);
+    void send(int pid_proc, A & data, int size) {
+      ez_send(pid_proc, data, size, TAG, m_comm);
     }
 
-    void recv_array(int pid_proc, A* buffer, int size) {
-      MPI_Recv(buffer, size*sizeof(A), MPI_BYTE, pid_proc, N, MPI_COMM_WORLD, &m_status);
+    void recv(int pid_proc, A & buffer, int size) {
+      ez_recv(pid_proc, buffer, size, TAG, m_comm, &m_status);
     }
 
     MPI_Status get_status() { return m_status; }
+    void set_comm(MPI_Comm comm) { m_comm = comm; }
     
     MPI_Status m_status;
+    MPI_Comm m_comm = MPI_COMM_WORLD;
   };
 };
