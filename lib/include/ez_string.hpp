@@ -36,4 +36,10 @@ namespace mmpi {
     str = data;
     delete[] data;
   }
+
+  void ez_send_recv(int pid_proc_send, int pid_proc_recv, string& data_send, string& data_recv, int tag, MPI_Comm comm, MPI_Status& status) {
+    ez_send(pid_proc_send, data_send, tag, comm);
+    ez_recv(pid_proc_recv, data_recv, tag, comm, status);
+  }
+
 };

@@ -35,14 +35,22 @@ struct Proc : Process<Prot> {
     if(proto.pid == 0) {
       vector<int> a = {1, 2, 3};
       vector<int> b;
+      string c = "test";
+      string d;
       proto.m3.send_recv(1, 1, a, b);
+      proto.m4.send_recv(1, 1, c, d);
       cout << "Je suis le process " << proto.pid << " : " << endl;
+      cout << "(" << proto.pid << ") " << "Chaine : " << d << endl;
       for(auto i : b) {cout << i;} cout << endl;
     } else {
       vector<int> a = {4, 5, 6};
       vector<int> b;
+      string c = "bidul";
+      string d;
       proto.m3.send_recv(0, 0, a, b);
+      proto.m4.send_recv(0, 0, c, d);
       cout << "Je suis le process " << proto.pid << " : " << endl;
+      cout << "(" << proto.pid << ") " << "Chaine : " << d << endl;
       for(auto i : b) {cout << i;} cout << endl;
     }
     /*if(proto.pid == 0) {
