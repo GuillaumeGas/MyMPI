@@ -22,28 +22,29 @@ struct Proc : Process<Prot> {
   Proc(Prot & p) : Process(p) {}
 
   void routine() {
-    if(proto.pid == 0) {
-      int a = 2;
-      proto.m1.ssend(1, a);
-    } else {
-      int a;
-      proto.m1.recv(0, a);
-      cout << "a : " << a << endl;
-    }
-
     /*if(proto.pid == 0) {
-      int a = -1;
-      string n = "serge";
-      string n2;
-      proto.m6.send_recv(1, 1, proto.pid, a);
-      cout << "Je suis " << n << " le process " << proto.pid << ", " << n2 << ": " << a << endl;
-    } else {
-      int a = -1;
-      string n = "francois";
-      string n2;
-      proto.m6.send_recv(0, 0, proto.pid, a);
-      cout << "Je suis " << n << " le process " << proto.pid << ", " << n2 << ": " << a << endl;
+      vector<int> a = {1, 2, 3, 4};
+      proto.m3.ssend(1, a);
+      for(auto i : a) { cout << i; } cout << endl;
+      } else {
+      vector<int> a;
+      proto.m3.recv(0, a);
+      for(auto i : a) { cout << i; } cout << endl;
       }*/
+
+    if(proto.pid == 0) {
+      vector<int> a = {1, 2, 3};
+      vector<int> b;
+      proto.m3.send_recv(1, 1, a, b);
+      cout << "Je suis le process " << proto.pid << " : " << endl;
+      for(auto i : b) {cout << i;} cout << endl;
+    } else {
+      vector<int> a = {4, 5, 6};
+      vector<int> b;
+      proto.m3.send_recv(0, 0, a, b);
+      cout << "Je suis le process " << proto.pid << " : " << endl;
+      for(auto i : b) {cout << i;} cout << endl;
+    }
     /*if(proto.pid == 0) {
       int a = 43;
       int b;

@@ -2,6 +2,7 @@
 
 #include <mpi.h>
 #include <vector>
+#include "ez_base.hpp"
 
 namespace mmpi {
   template<typename A>
@@ -19,8 +20,21 @@ namespace mmpi {
     int size;
     MPI_Probe(pid_proc, tag, comm, &status);
     MPI_Get_count(&status, MPI_BYTE, &size);
-    cout << "size : " << size << endl;
     data.resize(size/sizeof(A));
     MPI_Recv(data.data(), size, MPI_BYTE, pid_proc, tag, comm, MPI_STATUS_IGNORE);
+  }
+
+  template<typename A>
+  void ez_send_recv(int pid_proc_send, int pid_proc_recv, std::vector<A>& data_send, std::vector<A>& data_recv, int tag, MPI_Comm comm, MPI_Status& status) {
+    /*int size_send = data_send.size();
+    int size;
+    ez_send_recv(pid_proc_send, pid_proc_recv, size_send, size, tag, comm, status);
+    data_recv.resize(size/sizeof(A));
+    cout << "pid : " << pid_proc_send << endl;
+    cout << "data_send.data() : " << data_send.data() << endl;
+    cout << "data_recv.data() : " << data_recv.data() << endl;
+    MPI_Sendrecv(data_send.data(), size_send*sizeof(A), MPI_BYTE, pid_proc_recv, tag, data_recv.data(), size*sizeof(A), MPI_BYTE, pid_proc_send, tag, comm, MPI_STATUS_IGNORE);  */
+    ez_send(pid_proc_send, data_send, tag, comm);
+    ez_recv(pid_proc_recv, data_recv, tag, comm, status);
   }
 };
