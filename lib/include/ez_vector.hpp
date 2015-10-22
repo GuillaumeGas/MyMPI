@@ -10,6 +10,11 @@ namespace mmpi {
   }
 
   template<typename A>
+  void ez_ssend(int pid_proc, std::vector<A>& data, int tag, MPI_Comm comm) {
+    MPI_Ssend(data.date(), data.size()*sizeof(A), MPI_BYTE, pid_proc, tag, comm);
+  }
+
+  template<typename A>
   void ez_recv(int pid_proc, std::vector<A>& data, int tag, MPI_Comm comm, MPI_Status& status) {
     int size;
     MPI_Probe(pid_proc, tag, comm, &status);

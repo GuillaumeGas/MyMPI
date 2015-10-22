@@ -23,6 +23,15 @@ struct Proc : Process<Prot> {
 
   void routine() {
     if(proto.pid == 0) {
+      int a = 2;
+      proto.m1.ssend(1, a);
+    } else {
+      int a;
+      proto.m1.recv(0, a);
+      cout << "a : " << a << endl;
+    }
+
+    /*if(proto.pid == 0) {
       int a = -1;
       string n = "serge";
       string n2;
@@ -34,7 +43,7 @@ struct Proc : Process<Prot> {
       string n2;
       proto.m6.send_recv(0, 0, proto.pid, a);
       cout << "Je suis " << n << " le process " << proto.pid << ", " << n2 << ": " << a << endl;
-    }
+      }*/
     /*if(proto.pid == 0) {
       int a = 43;
       int b;
