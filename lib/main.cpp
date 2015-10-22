@@ -14,6 +14,7 @@ struct Prot : Protocol {
   Message<1, char> m2;
   Message<2, vector<int> > m3;
   Message<3, string> m4;
+  Message<4, string, int> m5;
 };
 
 struct Proc : Process<Prot> {
@@ -25,9 +26,9 @@ struct Proc : Process<Prot> {
       int tab[4] = {1, 2, 3, 4};
       char tab2[3] = {'a', 'b'};
       vector<int> vec = {1, 2, 3, 4};
-      string str = "bonjour";
+      string str = "emile";
       
-      proto.m4.send(1, str);
+      proto.m5.send(1, str, a);
       
     } else {
       int b = 2;
@@ -37,8 +38,8 @@ struct Proc : Process<Prot> {
       vector<int> vec_res;
       string res;
 
-      proto.m4.recv(0, res);
-      cout << res << endl;
+      proto.m5.recv(0, res, b);
+      cout << res << " a " << b << " ans." << endl;
     }
   }
 };

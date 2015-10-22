@@ -9,11 +9,12 @@ using namespace std;
 namespace mmpi {
   void ez_send(int pid_proc, string& str, int tag, MPI_Comm comm) {
     int size = str.size();
-    char * c_str = new char[size];
+    char * c_str = new char[size+1];
     for(int i = 0; i < size; i++) {
-      c_str[i] = str.c_str()[i];
+      c_str[i] = str[i];
     }
-    MPI_Send(c_str, size, MPI_BYTE, pid_proc, tag, comm);
+    c_str[size] = '\0';
+    MPI_Send(c_str, size+1, MPI_BYTE, pid_proc, tag, comm);
   }
 
   void ez_recv(int pid_proc, string& str, int tag, MPI_Comm comm, MPI_Status& status) {
