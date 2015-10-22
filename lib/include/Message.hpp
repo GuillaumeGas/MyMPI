@@ -20,14 +20,6 @@ namespace mmpi {
       return *this;
     }
 
-    void send(int pid_proc, A & data, int size) {
-      ez_send(pid_proc, data, size, TAG, m_comm);
-    }
-
-    void recv(int pid_proc, A & buffer, int size) {
-      ez_recv(pid_proc, buffer, size, TAG, m_comm, &m_status);
-    }
-
     MPI_Status get_status() { return m_status; }
     void set_comm(MPI_Comm comm) { m_comm = comm; }
     

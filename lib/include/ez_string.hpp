@@ -13,16 +13,16 @@ namespace mmpi {
     for(int i = 0; i < size; i++) {
       c_str[i] = str.c_str()[i];
     }
-    ez_send(pid_proc, c_str, size, tag, comm);
+    MPI_Send(c_str, size, MPI_BYTE, pid_proc, tag, comm);
   }
 
   void ez_recv(int pid_proc, string& str, int tag, MPI_Comm comm, MPI_Status& status) {
     int size;
     MPI_Probe(pid_proc, tag, comm, &status);
     MPI_Get_count(&status, MPI_BYTE, &size);
-    char * res = new char[size];
-    ez_recv(pid_proc, res, size, tag, comm, status);
-    str = res;
-    delete[] res;
+    char * data = new char[size];
+    MPI_Recv(data, size, MPI_BYTE, pid_proc, tag, comm, MPI_STATUS_IGNORE);
+    str = data;
+    delete[] data;
   }
 };
