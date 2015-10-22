@@ -9,21 +9,30 @@ namespace mmpi {
   template <int TAG, typename... Args>
   struct Message {
     Message() {}
+
+    MPI_Status get_status() { return m_status; }
+    void set_comm(MPI_Comm comm) { m_comm = comm; }
     
     void send(int pid_proc, Args& ... data) {
       send_(pid_proc, data...);
     }
 
+    void recv(int pid_proc, Args& ... buffer) {
+      recv_(pid_proc, buffer...);
+    }
+
+    void send_recv(int pid_proc_send, int pid_proc_recv, Args&... buffer_send, Args&... buffer_recv) {
+      send_recv_(pid_proc_send, pid_proc_recv, buffer..., buffer...);
+    }
+
+    
+  private:
     void send_(int) {}
     
     template<typename T_, typename... Targs>
     void send_(int pid_proc, T_ & data, Targs&... args) {
       ez_send(pid_proc, data, TAG, m_comm);
       send_(pid_proc, args...);
-    }
-
-    void recv(int pid_proc, Args& ... buffer) {
-      recv_(pid_proc, buffer...);
     }
 
     void recv_(int) {}
@@ -33,10 +42,15 @@ namespace mmpi {
       ez_recv(pid_proc, buffer, TAG, m_comm, m_status);
       recv_(pid_proc, args...);
     }
-
-    MPI_Status get_status() { return m_status; }
-    void set_comm(MPI_Comm comm) { m_comm = comm; }
     
+    void send_recv_(int) {}
+
+    template<typename T_, typename... Targs>
+    void send_recv_(int pid_proc_send, int pid_proc_recv, T_& buffer_send, Targs&... args_send, T_& buffer_recv, Targs&... args_recv) {
+      ez_send_recv(pid_proc_send, pid_proc_recv, buffer_send, buffer_recv, TAG, m_comm, m_status);
+      send_recv_(pid_proc_send, pid_proc_recv, args_send..., args_recv...);
+    }
+
     MPI_Status m_status;
     MPI_Comm m_comm = MPI_COMM_WORLD;
   };

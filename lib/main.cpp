@@ -15,32 +15,38 @@ struct Prot : Protocol {
   Message<2, vector<int> > m3;
   Message<3, string> m4;
   Message<4, string, int> m5;
+  Message<5, int> m6;
 };
 
 struct Proc : Process<Prot> {
   Proc(Prot & p) : Process(p) {}
 
   void routine() {
-    if(proto.pid == 0) {
+    int a;
+    proto.m6.send_recv(0, 1, proto.pid, a
+    /*if(proto.pid == 0) {
       int a = 43;
+      int b;
       int tab[4] = {1, 2, 3, 4};
       char tab2[3] = {'a', 'b'};
       vector<int> vec = {1, 2, 3, 4};
       string str = "emile";
       
-      proto.m5.send(1, str, a);
+      proto.m6.send_recv(0, 1, a, b);
+      cout << "Je suis " << proto.pid << ", res = " << b << endl;
       
     } else {
       int b = 2;
+      int a;
       int t[4];
       char t2[2];
       string str;
       vector<int> vec_res;
       string res;
 
-      proto.m5.recv(0, res, b);
+      proto.m6.send_recv(0, res, b);
       cout << res << " a " << b << " ans." << endl;
-    }
+      }*/
   }
 };
 
