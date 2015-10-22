@@ -22,7 +22,7 @@ namespace mmpi {
     }
 
     void send_recv(int pid_proc_send, int pid_proc_recv, Args&... buffer_send, Args&... buffer_recv) {
-      send_recv_(pid_proc_send, pid_proc_recv, buffer..., buffer...);
+      send_recv_(pid_proc_send, pid_proc_recv, buffer_send..., buffer_recv...);
     }
 
     
@@ -43,12 +43,12 @@ namespace mmpi {
       recv_(pid_proc, args...);
     }
     
-    void send_recv_(int) {}
+    void send_recv_(int, int) {}
 
     template<typename T_, typename... Targs>
-    void send_recv_(int pid_proc_send, int pid_proc_recv, T_& buffer_send, Targs&... args_send, T_& buffer_recv, Targs&... args_recv) {
+    void send_recv_(int pid_proc_send, int pid_proc_recv, T_& buffer_send, T_& buffer_recv, Targs&... args) {
       ez_send_recv(pid_proc_send, pid_proc_recv, buffer_send, buffer_recv, TAG, m_comm, m_status);
-      send_recv_(pid_proc_send, pid_proc_recv, args_send..., args_recv...);
+      send_recv_(pid_proc_send, pid_proc_recv, args...);
     }
 
     MPI_Status m_status;
