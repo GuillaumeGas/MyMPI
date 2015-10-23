@@ -1,5 +1,7 @@
 TODO :
 
+MPI_Sendrecv_replace (STRING)
+
 MPI_Isend
 MPI_Irecv
 MPI_Issend

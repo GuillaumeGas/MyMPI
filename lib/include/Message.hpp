@@ -12,7 +12,7 @@ namespace mmpi {
 
     MPI_Status get_status() { return m_status; }
     void set_comm(MPI_Comm comm) { m_comm = comm; }
-    
+
     void send(int pid_proc, Args& ... data) {
       send_(pid_proc, data...);
     }
@@ -36,7 +36,6 @@ namespace mmpi {
     void send_recv_replace(int pid_proc_send, int pid_proc_recv, Args&... buffer) {
       send_recv_replace_(pid_proc_send, pid_proc_recv, buffer...);
     }
-
     
   private:
     void send_(int) {}
@@ -84,7 +83,7 @@ namespace mmpi {
       ez_send_recv_replace(pid_proc_send, pid_proc_recv, buffer, TAG, m_comm, m_status);
       send_recv_replace_(pid_proc_send, pid_proc_recv, args...);
     }
-
+    
     MPI_Status m_status;
     MPI_Comm m_comm = MPI_COMM_WORLD;
   };

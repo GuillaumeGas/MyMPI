@@ -6,6 +6,7 @@
 
 #include "Protocol.hpp"
 #include "Process.hpp"
+#include "Globals.hpp"
 
 using namespace std;
 
@@ -35,7 +36,7 @@ namespace mmpi {
     }
 
     void finalize() {
-      MPI_Barrier(MPI_COMM_WORLD);
+      global::barrier(MPI_COMM_WORLD);
       MPI_Finalize();
     }
     
