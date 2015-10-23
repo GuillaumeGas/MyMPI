@@ -16,6 +16,7 @@ struct Prot : Protocol {
   Message<2, string> m3;
 
   ColMessage<vector<int> > m4;
+  ColMessage<int> m5;
 };
 
 struct Proc : Process<Prot> {
@@ -23,13 +24,13 @@ struct Proc : Process<Prot> {
 
   void routine() {
     vector<int> a;
-    vector<int> b;
+    a.resize(2);
     if(proto.pid == 0) {
-      a = {1, 2, 3, 4};
+      a = {1, 2};
     }
-    proto.m4.scatter(0, a, b, 2); 
-    cout << "Je suis " << proto.pid << endl;
-    for(auto i : b) { cout << i; } cout << endl; 
+    proto.m4.bcast(0, a);
+    cout << "Je suis " << proto.pid << " : " << endl;
+    for(auto i : a) { cout << i; } cout << endl;
   }
 };
 
