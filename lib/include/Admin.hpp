@@ -29,7 +29,8 @@ namespace mmpi {
 	  m_prot = new A(pid, nprocs);
 	  m_proc = new T(*m_prot);
 
-	  m_proc->routine(); }
+	  m_proc->routine(); 
+	}
 	  /*	} else {
 	  throw MMPIInstanceException();
 	}
