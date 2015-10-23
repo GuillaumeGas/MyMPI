@@ -34,7 +34,9 @@ struct Proc : Process<Prot> {
 int main(int argc, char ** argv) {
 
   Admin<Prot, Proc> ad(argc, argv);
+  Admin<Prot, Proc> ad2(argc, argv);
   ad.finalize();
+  ad2.finalize();
   
   return 0;
 }
