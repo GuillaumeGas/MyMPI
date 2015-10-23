@@ -20,7 +20,7 @@ namespace mmpi {
     size += MPI_BSEND_OVERHEAD;
     A* buffer = new A;
     MPI_Buffer_attach(buffer, size);
-    MPI_Bsend(&data, 1, MPI_BYTE, pid_proc, tag, comm);
+    MPI_Bsend(&data, sizeof(A), MPI_BYTE, pid_proc, tag, comm);
     MPI_Buffer_detach(buffer, &size);
     delete buffer;
   }
@@ -33,5 +33,10 @@ namespace mmpi {
   template<typename A>
   void ez_send_recv(int pid_proc_send, int pid_proc_recv, A& data_send, A& data_recv, int tag, MPI_Comm comm, MPI_Status& status) {
     MPI_Sendrecv(&data_send, sizeof(A), MPI_BYTE, pid_proc_send, tag, &data_recv, sizeof(A), MPI_BYTE, pid_proc_recv, tag, comm, &status);
+  }
+
+  template<typename A>
+  void ez_send_recv_replace(int pid_proc_send, int pid_proc_recv, A& data, int tag, MPI_Comm comm, MPI_Status& status) {
+    MPI_Sendrecv_replace(&data, sizeof(A), MPI_BYTE, pid_proc_send, tag, pid_proc_recv, tag, comm, &status);
   }
 };

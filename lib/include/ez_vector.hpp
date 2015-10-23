@@ -43,4 +43,9 @@ namespace mmpi {
     /*    ez_send(pid_proc_send, data_send, tag, comm);
 	  ez_recv(pid_proc_recv, data_recv, tag, comm, status);*/
   }
+
+  template<typename A>
+  void ez_send_recv_replace(int pid_proc_send, int pid_proc_recv, std::vector<A>& data, int tag, MPI_Comm comm, MPI_Status& status) {
+    MPI_Sendrecv_replace(data.data(), data.size()*sizeof(A), MPI_BYTE, pid_proc_send, tag, pid_proc_recv, tag, comm, &status);
+  }
 };

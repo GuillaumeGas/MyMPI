@@ -19,14 +19,16 @@ struct Proc : Process<Prot> {
   Proc(Prot & p) : Process(p) {}
 
   void routine() {
-    string a;
     if(proto.pid == 0) {
-      a = "test";
-      proto.m3.bsend(1, a);
+      vector<int> a = {1, 2, 3};
+      proto.m2.send_recv_replace(1, 1, a);
+      cout << "Je suis " << proto.pid << " : ";
+      for(auto i : a) { cout << i; } cout << endl;
     } else {
-      proto.m3.recv(0, a);
-      cout << "je suis : " << proto.pid << endl;
-      cout << "res : " << a << endl;
+      vector<int> a = {4, 5, 6};
+      proto.m2.send_recv_replace(0, 0, a);
+      cout << "Je suis " << proto.pid << " : ";
+      for(auto i : a) { cout << i; } cout << endl;
     }
   }
 };
