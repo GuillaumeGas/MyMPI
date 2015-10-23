@@ -2,6 +2,7 @@
 
 #include <mpi.h>
 #include "ez_col_base.hpp"
+#include "ez_col_vector.hpp"
 
 namespace mmpi {
   template <typename A>
@@ -13,6 +14,10 @@ namespace mmpi {
 
     void bcast(int pid_root, A& buffer) {
       ez_bcast(pid_root, buffer, m_comm);
+    }
+
+    void scatter(int pid_root, A& buffer_send, A& buffer_recv, int size) {
+      ez_scatter(pid_root, buffer_send, buffer_recv, size, m_comm);
     }
     
     MPI_Status m_status;

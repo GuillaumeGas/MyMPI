@@ -15,19 +15,21 @@ struct Prot : Protocol {
   Message<1, vector<int> > m2;
   Message<2, string> m3;
 
-  ColMessage<int> m4;
+  ColMessage<vector<int> > m4;
 };
 
 struct Proc : Process<Prot> {
   Proc(Prot & p) : Process(p) {}
 
   void routine() {
-    int a = -1;
+    vector<int> a;
+    vector<int> b;
     if(proto.pid == 0) {
-      a = 2;
+      a = {1, 2, 3, 4};
     }
-    proto.m4.bcast(0, a);
-    cout << "Je suis " << proto.pid << " : " << a << endl;
+    proto.m4.scatter(0, a, b, 2); 
+    cout << "Je suis " << proto.pid << endl;
+    for(auto i : b) { cout << i; } cout << endl; 
   }
 };
 
