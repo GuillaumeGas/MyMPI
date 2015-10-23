@@ -27,6 +27,24 @@ namespace mmpi {
     MPI_Ssend(c_str, size+1, MPI_BYTE, pid_proc, tag, comm);
   }
 
+  void ez_bsend(int pid_proc, string& str, int tag, MPI_Comm comm) {
+    int str_size = str.size();
+    int size;
+    MPI_Pack_size(str_size, MPI_BYTE, comm, &size);
+    size += MPI_BSEND_OVERHEAD;
+    char* buffer = new char[size];
+    char* c_str = new char[str_size+1];
+    for(int i = 0; i < str_size; i++) {
+      c_str[i] = str[i];
+    }
+    c_str[str_size] = '\0';
+    MPI_Buffer_attach(buffer, size);
+    MPI_Bsend(c_str, str_size+1, MPI_BYTE, pid_proc, tag, comm);
+    MPI_Buffer_detach(c_str, &size);
+    delete[] buffer;
+    delete[] c_str;
+  }
+
   void ez_recv(int pid_proc, string& str, int tag, MPI_Comm comm, MPI_Status& status) {
     int size;
     MPI_Probe(pid_proc, tag, comm, &status);

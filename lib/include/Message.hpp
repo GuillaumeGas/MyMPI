@@ -18,7 +18,11 @@ namespace mmpi {
     }
 
     void ssend(int pid_proc, Args&... data) {
-      send_(pid_proc, data...);
+      ssend_(pid_proc, data...);
+    }
+
+    void bsend(int pid_proc, Args&... data) {
+      bsend_(pid_proc, data...);
     }
 
     void recv(int pid_proc, Args& ... buffer) {
@@ -45,7 +49,14 @@ namespace mmpi {
     void ssend_(int pid_proc, T_& data, Targs&... args) {
       ez_ssend(pid_proc, data, TAG, m_comm);
     }
+
+    void bsend_(int) {}
     
+    template<typename T_, typename... Targs>
+    void bsend_(int pid_proc, T_& data, Targs&... args) {
+      ez_bsend(pid_proc, data, TAG, m_comm);
+    }
+  
     void recv_(int) {}
 
     template<typename T_, typename... Targs>

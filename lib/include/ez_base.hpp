@@ -14,6 +14,18 @@ namespace mmpi {
   }
 
   template<typename A>
+  void ez_bsend(int pid_proc, A& data, int tag, MPI_Comm comm) {
+    int size;
+    MPI_Pack_size(1, MPI_BYTE, comm, &size);
+    size += MPI_BSEND_OVERHEAD;
+    A* buffer = new A;
+    MPI_Buffer_attach(buffer, size);
+    MPI_Bsend(&data, 1, MPI_BYTE, pid_proc, tag, comm);
+    MPI_Buffer_detach(buffer, &size);
+    delete buffer;
+  }
+  
+  template<typename A>
   void ez_recv(int pid_proc, A& data, int tag, MPI_Comm comm, MPI_Status& status) {
     MPI_Recv(&data, sizeof(A), MPI_BYTE, pid_proc, tag, comm, &status);
   }
