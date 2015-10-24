@@ -14,4 +14,9 @@ namespace mpiez {
     buffer_recv.resize(size);
     MPI_Scatter(buffer_send.data(), size*sizeof(A), MPI_BYTE, buffer_recv.data(), size*sizeof(A), MPI_BYTE, pid_root, comm);
   }
+
+  template <typename A>
+  void ez_gather(int pid_root, std::vector<A>& buffer_send, std::vector<A>& buffer_recv, MPI_Comm comm) {
+    MPI_Gather(buffer_send.data(), buffer_send.size()*sizeof(A), MPI_BYTE, buffer_recv.data(), buffer_send.size()*sizeof(A), MPI_BYTE, pid_root, comm); 
+  }
 };

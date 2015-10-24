@@ -17,26 +17,21 @@ namespace mpiez {
   struct Mpiez {    
     Mpiez(int argc, char ** argv) : m_prot(NULL), m_proc(NULL) {
 
-      // try {
-	if(instance == NULL) {
-	  instance = this;
+      if(instance == NULL) {
+	instance = this;
 
-	  int pid, nprocs;
-	  MPI_Init(&argc, &argv);
-	  MPI_Comm_rank(MPI_COMM_WORLD, &pid);
-	  MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
+	int pid, nprocs;
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &pid);
+	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
       
-	  m_prot = new A(pid, nprocs);
-	  m_proc = new T(*m_prot);
+	m_prot = new A(pid, nprocs);
+	m_proc = new T(*m_prot);
+	m_proc->argc = argc;
+	m_proc->argv = argv;
 
-	  m_proc->routine(); 
-	}
-	  /*	} else {
-	  throw MMPIInstanceException();
-	}
-      } catch(MMPIException const& e) {
-	e.what();
-	}*/
+	m_proc->routine(); 
+      }
     }
 
     ~Mpiez() {

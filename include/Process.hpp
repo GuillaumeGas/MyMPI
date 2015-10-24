@@ -18,6 +18,8 @@ namespace mpiez {
       }*/
 
     A proto;
+    int argc;
+    char** argv;
   };
 
 };

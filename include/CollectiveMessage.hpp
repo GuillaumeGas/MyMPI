@@ -20,6 +20,10 @@ namespace mpiez {
       ez_scatter(pid_root, buffer_send, buffer_recv, size, m_comm);
     }
     
+    void gather(int pid_root, A& buffer_send, A& buffer_recv) {
+      ez_gather(pid_root, buffer_send, buffer_recv, m_comm);
+    }
+
     MPI_Comm m_comm = MPI_COMM_WORLD;
   };
 };

@@ -12,12 +12,7 @@ using namespace mpiez;
 
 struct Prot : Protocol {
   Prot(int pid, int nprocs) : Protocol(pid, nprocs) {}
-  Message<0, int> m1;
-  Message<1, vector<int> > m2;
-  Message<2, string> m3;
-
-  ColMessage<vector<int> > m4;
-  ColMessage<int> m5;
+  ColMessage<vector<int> > m;
 };
 
 struct Proc : Process<Prot> {
@@ -25,13 +20,27 @@ struct Proc : Process<Prot> {
 
   void routine() {
     vector<int> a;
-    a.resize(2);
+    vector<int> b;
     if(proto.pid == 0) {
-      a = {1, 2};
+      for(int i = 0; i < 15; i++ ){
+	a.push_back(i);
+      }
     }
-    proto.m4.bcast(0, a);
-    cout << "Je suis " << proto.pid << " : " << endl;
-    for(auto i : a) { cout << i; } cout << endl;
+    proto.m.scatter(0, a, b, 5);
+
+    cout << "Je suis " << proto.pid << " : ";
+    for(auto i : b) { cout << i << ", "; } cout << endl;
+    a.clear();
+    a.resize(15);
+
+    proto.m.gather(0, b, a);
+
+    if(proto.pid == 0) {
+      cout << "Je suis " << proto.pid << " : ";
+      if(proto.pid == 0) {
+	for(auto i : a) { cout << i << ", "; } cout << endl;
+      }
+    }
   }
 };
 
