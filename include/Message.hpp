@@ -1,11 +1,12 @@
 #pragma once
 
 #include <mpi.h>
-#include "ez_base.hpp"
-#include "ez_vector.hpp"
-#include "ez_string.hpp"
 
-namespace mmpi {
+#include <mpiez/ez_base.hpp>
+#include <mpiez/ez_vector.hpp>
+#include <mpiez/ez_string.hpp>
+
+namespace mpiez {
   template <int TAG, typename... Args>
   struct Message {
     Message() {}

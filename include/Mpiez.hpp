@@ -4,17 +4,16 @@
 #include <vector>
 #include <mpi.h>
 
-#include "Protocol.hpp"
-#include "Process.hpp"
-#include "Globals.hpp"
-#include "MMPIException.hpp"
+#include <mpiez/Protocol.hpp>
+#include <mpiez/Process.hpp>
+#include <mpiez/Globals.hpp>
 
 using namespace std;
 
-namespace mmpi {  
+namespace mpiez {  
   template <typename A, typename T>
-  struct Admin {    
-    Admin(int argc, char ** argv) : m_prot(NULL), m_proc(NULL) {
+  struct Mpiez {    
+    Mpiez(int argc, char ** argv) : m_prot(NULL), m_proc(NULL) {
 
       // try {
 	if(instance == NULL) {
@@ -24,7 +23,6 @@ namespace mmpi {
 	  MPI_Init(&argc, &argv);
 	  MPI_Comm_rank(MPI_COMM_WORLD, &pid);
 	  MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
-	  MPI_Status status;
       
 	  m_prot = new A(pid, nprocs);
 	  m_proc = new T(*m_prot);
@@ -39,7 +37,7 @@ namespace mmpi {
 	}*/
     }
 
-    ~Admin() {
+    ~Mpiez() {
       if(instance == this) {
 	if(m_prot)
 	  delete m_prot;

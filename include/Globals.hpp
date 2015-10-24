@@ -2,7 +2,7 @@
 
 #include <mpi.h>
 
-namespace mmpi {
+namespace mpiez {
   namespace global {
     void barrier(MPI_Comm comm) {
       MPI_Barrier(comm);

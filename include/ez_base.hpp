@@ -2,7 +2,7 @@
 
 #include <mpi.h>
 
-namespace mmpi {
+namespace mpiez {
   template<typename A>
   void ez_send(int pid_proc, A& data, int tag, MPI_Comm comm) {
     MPI_Send(&data, sizeof(A), MPI_BYTE, pid_proc, tag, comm);

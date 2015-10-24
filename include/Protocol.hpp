@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mmpi {
+namespace mpiez {
   struct Protocol {
     Protocol(int pid, int nprocs) : pid(pid), nprocs(nprocs) {}
     

@@ -2,9 +2,10 @@
 
 #include <mpi.h>
 #include <vector>
-#include "ez_base.hpp"
 
-namespace mmpi {
+#include <mpiez/ez_base.hpp>
+
+namespace mpiez {
   template<typename A>
   void ez_send(int pid_proc, std::vector<A>& data, int tag, MPI_Comm comm) {
     MPI_Send(data.data(), data.size()*sizeof(A), MPI_BYTE, pid_proc, tag, comm);

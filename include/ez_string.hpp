@@ -2,11 +2,12 @@
 
 #include <mpi.h>
 #include <string>
-#include "ez_base.hpp"
+
+#include <mpiez/ez_base.hpp>
 
 using namespace std;
 
-namespace mmpi {
+namespace mpiez {
   void ez_send(int pid_proc, string& str, int tag, MPI_Comm comm) {
     int size = str.size();
     char * c_str = new char[size+1];

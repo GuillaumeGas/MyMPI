@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mmpi {
+namespace mpiez {
   template <typename A>
   struct Process {
     Process(A proto) : proto(proto) {
