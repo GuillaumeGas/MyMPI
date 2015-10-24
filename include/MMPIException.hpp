@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mmpi {
+namespace mpiez {
   class MMPIException {
   public:
     MMPIException() {}

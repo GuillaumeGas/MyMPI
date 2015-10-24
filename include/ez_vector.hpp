@@ -3,7 +3,7 @@
 #include <mpi.h>
 #include <vector>
 
-#include <mpiez/ez_base.hpp>
+#include <mpiez/include/ez_base.hpp>
 
 namespace mpiez {
   template<typename A>
@@ -13,7 +13,7 @@ namespace mpiez {
 
   template<typename A>
   void ez_ssend(int pid_proc, std::vector<A>& data, int tag, MPI_Comm comm) {
-    MPI_Ssend(data.date(), data.size()*sizeof(A), MPI_BYTE, pid_proc, tag, comm);
+    MPI_Ssend(data.data(), data.size()*sizeof(A), MPI_BYTE, pid_proc, tag, comm);
   }
 
   template<typename A>

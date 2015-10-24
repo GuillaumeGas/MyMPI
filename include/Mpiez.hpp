@@ -4,9 +4,11 @@
 #include <vector>
 #include <mpi.h>
 
-#include <mpiez/Protocol.hpp>
-#include <mpiez/Process.hpp>
-#include <mpiez/Globals.hpp>
+#include <mpiez/include/Protocol.hpp>
+#include <mpiez/include/Process.hpp>
+#include <mpiez/include/Globals.hpp>
+#include <mpiez/include/Message.hpp>
+#include <mpiez/include/CollectiveMessage.hpp>
 
 using namespace std;
 
@@ -55,9 +57,9 @@ namespace mpiez {
     
     A * m_prot;
     T * m_proc;
-    static Admin * instance;
+    static Mpiez * instance;
   };
 
   template<typename A, typename T>
-  Admin<A,T> * Admin<A,T>::instance = NULL;
+  Mpiez<A,T> * Mpiez<A,T>::instance = NULL;
 };

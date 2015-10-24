@@ -2,9 +2,9 @@
 
 #include <mpi.h>
 
-#include <mpiez/ez_base.hpp>
-#include <mpiez/ez_vector.hpp>
-#include <mpiez/ez_string.hpp>
+#include <mpiez/include/ez_base.hpp>
+#include <mpiez/include/ez_vector.hpp>
+#include <mpiez/include/ez_string.hpp>
 
 namespace mpiez {
   template <int TAG, typename... Args>

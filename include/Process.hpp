@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mpiez/include/Globals.hpp>
+
 namespace mpiez {
   template <typename A>
   struct Process {
@@ -8,6 +10,14 @@ namespace mpiez {
 
     virtual void routine() = 0;
     
+    /*    template <typename T>
+    blockExec(void (*fct)(T), T value) {
+      global::barrier(MPI_COMM_WORLD);
+      (*fct)(value);
+      global::barrier(MPI_COMM_WORLD);
+      }*/
+
     A proto;
   };
+
 };

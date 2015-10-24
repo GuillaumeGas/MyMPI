@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/guidono/Documents/prog/C++/mpiez/test/main.cpp
+iostream
+-
+vector
+-
+mpiez/include/Mpiez.hpp
+-
+mpiez/include/Protocol.hpp
+-
+mpiez/include/Process.hpp
+-
+mpiez/include/Message.hpp
+-
+mpiez/include/CollectiveMessage.hpp
+-
+

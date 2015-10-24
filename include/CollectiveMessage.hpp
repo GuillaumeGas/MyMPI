@@ -2,8 +2,8 @@
 
 #include <mpi.h>
 
-#include <mpiez/ez_col_base.hpp>
-#include <mpiez/ez_col_vector.hpp>
+#include <mpiez/include/ez_col_base.hpp>
+#include <mpiez/include/ez_col_vector.hpp>
 
 namespace mpiez {
   template <typename A>

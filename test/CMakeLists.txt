@@ -2,9 +2,4 @@ PROJECT(mmpi)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 SET(CMAKE_CXX_COMPILER "mpic++")
 ADD_DEFINITIONS(-std=c++14 -ggdb)
-FILE(
-  GLOB_RECURSE
-  SRC
-  lib/*.cpp
-  )
-ADD_EXECUTABLE(mmpi ${SRC})
+ADD_EXECUTABLE(mmpi "main.cpp")

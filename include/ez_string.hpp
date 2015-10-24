@@ -3,7 +3,7 @@
 #include <mpi.h>
 #include <string>
 
-#include <mpiez/ez_base.hpp>
+#include <mpiez/include/ez_base.hpp>
 
 using namespace std;
 
