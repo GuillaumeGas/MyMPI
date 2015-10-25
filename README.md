@@ -75,38 +75,36 @@ If you want to use int* or char*, you have to add the following define before in
 ```
 #!C++
 
-__cpp98_version__ 
+#define __cpp98_version__ 
 ```
 
 
 [!] : if you use this define, you can't use the vector type anymore.
 
-### TODOO ###
-
 # Point to point communications
-*MPI_Sendrecv_replace (STRING)
-*MPI_Isend
-*MPI_Irecv
-*MPI_Issend
-*MPI_Ibsend
+* MPI_Sendrecv_replace (STRING)
+* MPI_Isend
+* MPI_Irecv
+* MPI_Issend
+* MPI_Ibsend
 
 # Collective communications
-*MPI_Allgather
-*MPI_Alltoall
-*MPI_Reduce
-*MPI_Allreduce
-*MPI_Scatterv
-*MPI_Gatherv
-*MPI_Allgatherv
-*MPI_Alltoallv
+* MPI_Allgather
+* MPI_Alltoall
+* MPI_Reduce
+* MPI_Allreduce
+* MPI_Scatterv
+* MPI_Gatherv
+* MPI_Allgatherv
+* MPI_Alltoallv
 
 # Global methods
-*MPI_Test        //we should use it if Irecv returns a *request
-*MPI_Testall
-*MPI_Testany
-*MPI_Wait
-*MPI_Waitall
-*MPI_Waitany
+* MPI_Test        //we should use it if Irecv returns a *request
+* MPI_Testall
+* MPI_Testany
+* MPI_Wait
+* MPI_Waitall
+* MPI_Waitany
 
 # Communicators
 *MPI_Comm_split
