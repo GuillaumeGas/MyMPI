@@ -17,15 +17,21 @@ struct Proc : Process<Prot> {
   Proc(Prot & p) : Process(p) {}
 
   void routine() {
-    int a[4];
+    int a;
     if(proto.pid == 0) {
-      int b[4] = {1, 2, 3, 4};
-      proto.m.send(1, b, 4);
+      a = 2;
+      proto.m.send(1, a);
+      a = 3;
     } else {
-      proto.m.recv(0, a, 4);
+      proto.m.recv(0, a);
     }
-    cout << "Je suis " << proto.pid << " : ";
-    for(int i = 0;i<4;i++) {cout<<a[i];}cout<<endl;
+    test(a);
+  }
+
+  void test(int a) {
+    global::barrier(MPI_COMM_WORLD);
+    cout << "Je suis " << proto.pid << " : " << a << endl;
+    global::barrier(MPI_COMM_WORLD);
   }
 };
 
