@@ -52,6 +52,7 @@ namespace mpiez {
     template<typename T_, typename... Targs>
     void ssend_(int pid_proc, T_& data, Targs&... args) {
       ez_ssend(pid_proc, data, TAG, m_comm);
+      ssend_(pid_proc, args...);
     }
 
     void bsend_(int) {}
@@ -59,6 +60,7 @@ namespace mpiez {
     template<typename T_, typename... Targs>
     void bsend_(int pid_proc, T_& data, Targs&... args) {
       ez_bsend(pid_proc, data, TAG, m_comm);
+      bsend_(pid_proc, args...);
     }
   
     void recv_(int) {}

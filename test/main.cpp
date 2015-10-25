@@ -2,45 +2,28 @@
 #include <vector>
 
 #include <mpiez/include/Mpiez.hpp>
-#include <mpiez/include/Protocol.hpp>
-#include <mpiez/include/Process.hpp>
-#include <mpiez/include/Message.hpp>
-#include <mpiez/include/CollectiveMessage.hpp>
 
 using namespace std;
 using namespace mpiez;
 
 struct Prot : Protocol {
   Prot(int pid, int nprocs) : Protocol(pid, nprocs) {}
-  ColMessage<vector<int> > m;
+  Message<0, int> m;
 };
 
 struct Proc : Process<Prot> {
   Proc(Prot & p) : Process(p) {}
 
   void routine() {
-    vector<int> a;
-    vector<int> b;
+    int a[4];
     if(proto.pid == 0) {
-      for(int i = 0; i < 15; i++ ){
-	a.push_back(i);
-      }
+      int b[4] = {1, 2, 3, 4};
+      proto.m.send(1, b, 4);
+    } else {
+      proto.m.recv(0, a, 4);
     }
-    proto.m.scatter(0, a, b, 5);
-
     cout << "Je suis " << proto.pid << " : ";
-    for(auto i : b) { cout << i << ", "; } cout << endl;
-    a.clear();
-    a.resize(15);
-
-    proto.m.gather(0, b, a);
-
-    if(proto.pid == 0) {
-      cout << "Je suis " << proto.pid << " : ";
-      if(proto.pid == 0) {
-	for(auto i : a) { cout << i << ", "; } cout << endl;
-      }
-    }
+    for(int i = 0;i<4;i++) {cout<<a[i];}cout<<endl;
   }
 };
 
