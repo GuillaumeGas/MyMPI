@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 
+#define __cpp98_version__
+
 #include <mpiez/include/Mpiez.hpp>
 
 using namespace std;
