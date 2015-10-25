@@ -107,12 +107,12 @@ If you want to use int* or char*, you have to add the following define before in
 * MPI_Waitany
 
 # Communicators
-*MPI_Comm_split
-*MPI_Comm_rank
-*MPI_Cart_create
-*MPI_Cart_rank
-*MPI_Cart_coord
-*MPI_Cart_shift
-*MPI_Cart_get
-*MPI_Cartdim_get
-*MPI_Cart_sub
+* MPI_Comm_split
+* MPI_Comm_rank
+* MPI_Cart_create
+* MPI_Cart_rank
+* MPI_Cart_coord
+* MPI_Cart_shift
+* MPI_Cart_get
+* MPI_Cartdim_get
+* MPI_Cart_sub
