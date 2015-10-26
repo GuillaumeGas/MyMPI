@@ -59,7 +59,7 @@ namespace mpiez {
     }
 
     void send_recv_replace(int pid_proc_send, int pid_proc_recv, A* buffer, int size) {
-      ez_send_recv_replace(pid_proc_send, pid_proc_recv, buffer, size);
+      ez_send_recv_replace(pid_proc_send, pid_proc_recv, buffer, size, TAG, m_comm, m_status);
     }
     
     MPI_Status m_status;
