@@ -5,18 +5,88 @@
 
 namespace mpiez {
   template<typename A>
-  void ez_bcast(int pid_root, std::vector<A>& buffer, MPI_Comm comm) {
-    MPI_Bcast(buffer.data(), buffer.size()*sizeof(A), MPI_BYTE, pid_root, comm);
+  void ez_bcast(int root_pid, std::vector<A>& buffer, MPI_Comm comm) {
+    MPI_Bcast(buffer.data(), buffer.size()*sizeof(A), MPI_BYTE, root_pid, comm);
   }
 
   template<typename A>
-  void ez_scatter(int pid_root, std::vector<A>& buffer_send, std::vector<A>& buffer_recv, int size, MPI_Comm comm) {
-    buffer_recv.resize(size);
-    MPI_Scatter(buffer_send.data(), size*sizeof(A), MPI_BYTE, buffer_recv.data(), size*sizeof(A), MPI_BYTE, pid_root, comm);
+  void ez_scatter(int root_pid, std::vector<A>& send_buffer, std::vector<A>& recv_buffer, int tot_size, int nprocs, MPI_Comm comm) {
+    if(tot_size%nprocs != 0) {
+      //TODOO EXCEPTION
+      throw "Size is not divisible by number of process !";
+    } else {
+      int size = tot_size/nprocs;
+      recv_buffer.resize(size);
+      MPI_Scatter(send_buffer.data(), size*sizeof(A), MPI_BYTE, recv_buffer.data(), size*sizeof(A), MPI_BYTE, root_pid, comm);
+    }
+  }
+
+  template<typename A>
+  void ez_scatterv(int root_pid, std::vector<A>& send_buffer, std::vector<A>& recv_buffer, int tot_size, int pid, int nprocs, MPI_Comm comm) {
+    int n_local = tot_size/nprocs;
+    int nprocs_left = tot_size%nprocs;
+    int recv_size = n_local;
+
+    int* counts = new int[nprocs];
+    int* displs = new int[nprocs];
+
+    int ptr = 0;
+    for(int i = 0; i < nprocs_left; i++) {
+      counts[i] = n_local+1;
+      displs[i] = ptr;
+      ptr += n_local+1;
+    }
+    for(int i = nprocs_left; i < nprocs; i++) {
+      counts[i] = n_local;
+      displs[i] = ptr;
+      ptr += n_local;
+    }
+
+    if(pid < nprocs_left)
+      recv_size += 1;
+    recv_buffer.resize(recv_size);
+
+    MPI_Scatterv(send_buffer.data(), counts, displs, MPI_BYTE, recv_buffer.data(), recv_size, MPI_BYTE, root_pid, comm); 
   }
 
   template <typename A>
-  void ez_gather(int pid_root, std::vector<A>& buffer_send, std::vector<A>& buffer_recv, MPI_Comm comm) {
-    MPI_Gather(buffer_send.data(), buffer_send.size()*sizeof(A), MPI_BYTE, buffer_recv.data(), buffer_send.size()*sizeof(A), MPI_BYTE, pid_root, comm); 
+  void ez_gather(int root_pid, std::vector<A>& send_buffer, std::vector<A>& recv_buffer, int pid, int nprocs, MPI_Comm comm) {
+    if(pid == root_pid && recv_buffer.size() < (send_buffer.size()*nprocs)) {
+      recv_buffer.resize(send_buffer.size()*nprocs);
+    } else {
+      MPI_Gather(send_buffer.data(), send_buffer.size()*sizeof(A), MPI_BYTE, recv_buffer.data(), send_buffer.size()*sizeof(A), MPI_BYTE, root_pid, comm); 
+    }
+  }
+
+  template<typename A>
+  void ez_gatherv(int root_pid, std::vector<A>& send_buffer, std::vector<A>& recv_buffer, int pid, int nprocs, MPI_Comm comm) {
+
+    if(send_buffer.size() == 0) {
+      throw "Your recv buffer'size is null !";
+    } else {
+      int n_local = recv_buffer.size()/nprocs;
+      int nprocs_left = recv_buffer.size()%nprocs;
+      int recv_size = n_local;
+
+      int* counts = new int[nprocs];
+      int* displs = new int[nprocs];
+
+      int ptr = 0;
+      for(int i = 0; i < nprocs_left; i++) {
+	counts[i] = n_local+1;
+	displs[i] = ptr;
+	ptr += n_local+1;
+      }
+      for(int i = nprocs_left; i < nprocs; i++) {
+	counts[i] = n_local;
+	displs[i] = ptr;
+	ptr += n_local;
+      }
+
+      if(pid < nprocs_left)
+	recv_size += 1;
+    
+      MPI_Gatherv(send_buffer.data(), send_buffer.size(), MPI_BYTE, recv_buffer.data(), counts, displs, MPI_BYTE, root_pid, comm); 
+    }
   }
 };

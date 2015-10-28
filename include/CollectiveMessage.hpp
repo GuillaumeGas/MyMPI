@@ -8,22 +8,39 @@
 namespace mpiez {
   template <typename A>
   struct ColMessage {
-    ColMessage() {}
-
-    void set_comm(MPI_Comm comm) { m_comm = comm; }
-
-    void bcast(int pid_root, A& buffer) {
-      ez_bcast(pid_root, buffer, m_comm);
+    ColMessage() {
+      set_comm(MPI_COMM_WORLD);
     }
 
-    void scatter(int pid_root, A& buffer_send, A& buffer_recv, int size) {
-      ez_scatter(pid_root, buffer_send, buffer_recv, size, m_comm);
+    void set_comm(MPI_Comm comm) { 
+      m_comm = comm; 
+      MPI_Comm_rank(m_comm, &m_pid);
+      MPI_Comm_size(m_comm, &m_nprocs);
+    }
+
+    void bcast(int root_pid, A& buffer) {
+      ez_bcast(root_pid, buffer, m_comm);
+    }
+
+    void scatter(int root_pid, A& send_buffer, A& recv_buffer, int tot_size) {
+      ez_scatter(root_pid, send_buffer, recv_buffer, tot_size, m_nprocs, m_comm);
+    }
+
+    void scatterv(int root_pid, A& send_buffer, A& recv_buffer, int tot_size) {
+      ez_scatterv(root_pid, send_buffer, recv_buffer, tot_size, m_pid, m_nprocs, m_comm);
     }
     
-    void gather(int pid_root, A& buffer_send, A& buffer_recv) {
-      ez_gather(pid_root, buffer_send, buffer_recv, m_comm);
+    void gather(int root_pid, A& send_buffer, A& recv_buffer) {
+      ez_gather(root_pid, send_buffer, recv_buffer, m_pid, m_nprocs, m_comm);
     }
 
-    MPI_Comm m_comm = MPI_COMM_WORLD;
+    void gatherv(int root_pid, A& send_buffer, A& recv_buffer, int tot_size) {
+      ez_gatherv(root_pid, send_buffer, recv_buffer, tot_size, m_pid, m_nprocs, m_comm);
+    }
+
+    MPI_Comm m_comm;
+    int m_pid;
+    int m_nprocs;
   };
 };
+ 
