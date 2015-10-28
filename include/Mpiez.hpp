@@ -7,11 +7,7 @@
 #include <mpiez/include/Protocol.hpp>
 #include <mpiez/include/Process.hpp>
 #include <mpiez/include/Globals.hpp>
-#if (__cplusplus < 201103L) || defined(__cpp98_version__)
-#include <mpiez/include/Message_cpp98.hpp>
-#else
 #include <mpiez/include/Message.hpp>
-#endif
 #include <mpiez/include/CollectiveMessage.hpp>
 
 using namespace std;

@@ -27,26 +27,30 @@ namespace mpiez {
     int nprocs_left = tot_size%nprocs;
     int recv_size = n_local;
 
-    int* counts = new int[nprocs];
-    int* displs = new int[nprocs];
+    int* counts = NULL;
+    int* displs = NULL;
+    
+    if(pid == root_pid) {
+      counts = new int[nprocs];
+      displs = new int[nprocs];
 
-    int ptr = 0;
-    for(int i = 0; i < nprocs_left; i++) {
-      counts[i] = n_local+1;
-      displs[i] = ptr;
-      ptr += n_local+1;
-    }
-    for(int i = nprocs_left; i < nprocs; i++) {
-      counts[i] = n_local;
-      displs[i] = ptr;
-      ptr += n_local;
-    }
+      int ptr = 0;
+      for(int i = 0; i < nprocs_left; i++) {
+	counts[i] = (n_local+1)*sizeof(A);
+	displs[i] = ptr;
+	ptr += (n_local+1)*sizeof(A);
+      }
+      for(int i = nprocs_left; i < nprocs; i++) {
+	counts[i] = n_local*sizeof(A);
+	displs[i] = ptr;
+	ptr += n_local*sizeof(A);
+      }
 
+    }
     if(pid < nprocs_left)
       recv_size += 1;
     recv_buffer.resize(recv_size);
-
-    MPI_Scatterv(send_buffer.data(), counts, displs, MPI_BYTE, recv_buffer.data(), recv_size, MPI_BYTE, root_pid, comm); 
+    MPI_Scatterv(send_buffer.data(), counts, displs, MPI_BYTE, recv_buffer.data(), recv_size*sizeof(A), MPI_BYTE, root_pid, comm); 
   }
 
   template <typename A>
@@ -59,34 +63,36 @@ namespace mpiez {
   }
 
   template<typename A>
-  void ez_gatherv(int root_pid, std::vector<A>& send_buffer, std::vector<A>& recv_buffer, int pid, int nprocs, MPI_Comm comm) {
+  void ez_gatherv(int root_pid, std::vector<A>& send_buffer, std::vector<A>& recv_buffer, int tot_size, int pid, int nprocs, MPI_Comm comm) {
+    int n_local = tot_size/nprocs;
+    int nprocs_left = tot_size%nprocs;
+    int send_size = n_local;
 
-    if(send_buffer.size() == 0) {
-      throw "Your recv buffer'size is null !";
-    } else {
-      int n_local = recv_buffer.size()/nprocs;
-      int nprocs_left = recv_buffer.size()%nprocs;
-      int recv_size = n_local;
+    if(pid == root_pid && recv_buffer.size() < tot_size) {
+      recv_buffer.resize(tot_size+1);
+    }
 
-      int* counts = new int[nprocs];
-      int* displs = new int[nprocs];
+    int* counts = NULL; 
+    int* displs = NULL;
 
+    if(pid == root_pid) {
+      counts = new int[nprocs];
+      displs = new int[nprocs];
       int ptr = 0;
       for(int i = 0; i < nprocs_left; i++) {
-	counts[i] = n_local+1;
+	counts[i] = (n_local+1)*sizeof(A);
 	displs[i] = ptr;
-	ptr += n_local+1;
+	ptr += (n_local+1)*sizeof(A);
       }
       for(int i = nprocs_left; i < nprocs; i++) {
-	counts[i] = n_local;
+	counts[i] = n_local*sizeof(A);
 	displs[i] = ptr;
-	ptr += n_local;
+	ptr += n_local*sizeof(A);
       }
-
-      if(pid < nprocs_left)
-	recv_size += 1;
-    
-      MPI_Gatherv(send_buffer.data(), send_buffer.size(), MPI_BYTE, recv_buffer.data(), counts, displs, MPI_BYTE, root_pid, comm); 
     }
+    if(pid < nprocs_left)
+      send_size += 1;
+    
+    MPI_Gatherv(send_buffer.data(), send_size*sizeof(A), MPI_BYTE, recv_buffer.data(), counts, displs, MPI_BYTE, root_pid, comm); 
   }
 };

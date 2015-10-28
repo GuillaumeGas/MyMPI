@@ -38,13 +38,14 @@ namespace mpiez {
   }
 
   template<typename A>
-  void ez_send_recv(int pid_proc_send, int pid_proc_recv, std::vector<A>& data_send, std::vector<A>& data_recv, int tag, MPI_Comm comm, MPI_Status& status) {
-    int size = data_send.size();
-    data_recv.resize(size);
-    MPI_Sendrecv(data_send.data(), size*sizeof(A), MPI_BYTE, pid_proc_send, tag, data_recv.data(), size*sizeof(A), MPI_BYTE, pid_proc_recv, tag, comm, MPI_STATUS_IGNORE);  
-    /*    ez_send(pid_proc_send, data_send, tag, comm);
-	  ez_recv(pid_proc_recv, data_recv, tag, comm, status);*/
-  }
+  void ez_send_recv(int pid_proc_send, int pid_proc_recv, std::vector<A>& data_send, std::vector<A>& data_recv, int tag, MPI_Comm comm, MPI_Status& status, int send_size = -1, int recv_size = -1) {
+    if(send_size == -1 && recv_size == -1) {
+      send_size = data_send.size();
+      recv_size = send_size;
+    }
+    data_recv.resize(recv_size);
+    MPI_Sendrecv(data_send.data(), send_size*sizeof(A), MPI_BYTE, pid_proc_send, tag, data_recv.data(), recv_size*sizeof(A), MPI_BYTE, pid_proc_recv, tag, comm, MPI_STATUS_IGNORE);  
+ }
 
   template<typename A>
   void ez_send_recv_replace(int pid_proc_send, int pid_proc_recv, std::vector<A>& data, int tag, MPI_Comm comm, MPI_Status& status) {

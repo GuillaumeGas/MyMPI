@@ -4,8 +4,6 @@
 
 #include <mpiez/include/Mpiez.hpp>
 
-#define LOCAL_SIZE 5
-
 using namespace std;
 using namespace mpiez;
 
@@ -23,41 +21,54 @@ struct Proc : Process<Prot> {
     vector<int> tab;
     vector<int> tab_loc;
     
+    int tot_size = atoi(argv[1]);
+
     if(proto.pid == 0) {
-      for(int i = 0; i < (LOCAL_SIZE*proto.nprocs); i++) {
+      for(int i = 0; i < tot_size; i++) {
 	tab.push_back(rand()%100);
       }
       print_vector(tab);
     }
-    proto.m.scatter(0, tab, tab_loc, LOCAL_SIZE);
+
+    proto.m.scatterv(0, tab, tab_loc, tot_size);
 
     sort(tab_loc.begin(), tab_loc.end());
     
     int proc_next = proto.pid+1;
     int proc_prev = proto.pid-1;
       
+    int nprocs_left = tot_size%proto.nprocs;
+    int size_loc    = tot_size/proto.nprocs;
+    int size_left   = size_loc;
+    int size_right  = size_loc;
+    if(proc_prev < nprocs_left)
+      size_left += 1;
+    if(proc_next < nprocs_left)
+      size_right += 1;
+    
+
     for(int i = 0; i < proto.nprocs; i++) {
       vector<int> tmp;
       if(i%2 == 0) {
 	if(proto.pid%2 == 0 && proc_next < proto.nprocs) {
-	  proto.m1.send_recv(proc_next, proc_next, tab_loc, tmp);
+	  proto.m1.send_recv(proc_next, proc_next, tab_loc, tmp, tab_loc.size(), size_right);
 	  fusion_plus_petits(tab_loc, tmp);
 	} else if(proto.pid%2 != 0) {
-	  proto.m1.send_recv(proc_prev, proc_prev, tab_loc, tmp);
+	  proto.m1.send_recv(proc_prev, proc_prev, tab_loc, tmp, tab_loc.size(), size_left);
 	  fusion_plus_grands(tab_loc, tmp);
 	}
       } else {
 	if(proto.pid%2 == 0 && proto.pid != 0) {
-	  proto.m1.send_recv(proc_prev, proc_prev, tab_loc, tmp);
+	  proto.m1.send_recv(proc_prev, proc_prev, tab_loc, tmp, tab_loc.size(), size_left);
 	  fusion_plus_grands(tab_loc, tmp);
 	} else if(proto.pid%2 != 0 && proc_next < proto.nprocs){
-	  proto.m1.send_recv(proc_next, proc_next, tab_loc, tmp);
+	  proto.m1.send_recv(proc_next, proc_next, tab_loc, tmp, tab_loc.size(), size_right);
 	  fusion_plus_petits(tab_loc, tmp);
 	}
       } 
     }
 
-    proto.m.gather(0, tab_loc, tab);
+    proto.m.gatherv(0, tab_loc, tab, tot_size);
     if(proto.pid == 0) {
       print_vector(tab);
     }
@@ -67,8 +78,8 @@ struct Proc : Process<Prot> {
   void fusion_plus_grands(vector<int>& tab1, vector<int>& tab2) {
     int size = tab1.size();
     vector<int> tmp; tmp.resize(size);
-    int ptr1 = size-1, ptr2 = size-1;
-    for (int i=size-1; i>=0; i--) {
+    int ptr1 = tab1.size()-1, ptr2 = tab2.size()-1;
+    for (int i=tab1.size()-1; i>=0; i--) {
       if (tab1[ptr1]>=tab2[ptr2]) {
 	tmp[i]=tab1[ptr1];
 	ptr1--;
@@ -83,8 +94,10 @@ struct Proc : Process<Prot> {
 
   /* Garde les n plus petits elements de a+b et garde le tout dans a */
   void fusion_plus_petits(vector<int>& tab1, vector<int>& tab2) {
-    int size = tab1.size();
-    vector<int> tmp; tmp.resize(size);
+    int n1 = tab1.size();
+    int n2 = tab2.size();
+    int size = (n1 > n2) ? n2 : n1;
+    vector<int> tmp; tmp.resize(n1);
     int ptr1 = 0, ptr2 = 0;
     for (int i=0; i<size; i++) {
       if (tab1[ptr1]<=tab2[ptr2]) {
@@ -96,6 +109,14 @@ struct Proc : Process<Prot> {
 	ptr2++;
       }
     }
+    
+    if (n1>n2) {
+      if (ptr2>=n2)
+	tmp[n1-1] = tab1[ptr1];
+      else 
+	tmp[n1-1] = (tab1[ptr1]<=tab2[ptr2]) ? tab1[ptr1] : tab2[ptr2];
+    }
+
     tab1 = tmp;
   }
  
