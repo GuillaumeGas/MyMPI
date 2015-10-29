@@ -108,4 +108,5 @@ namespace mpiez {
       recv_buffer.resize(tot_size);
     MPI_Allgather(send_buffer.data(), send_size*sizeof(A), MPI_BYTE, recv_buffer.data(), send_size*sizeof(A), MPI_BYTE, comm);
   }
+
 };

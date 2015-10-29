@@ -86,4 +86,9 @@ namespace mpiez {
     delete[] counts;
     delete[] displs;
   }
+
+  template<typename A>
+  void ez_allgather(A* send_buffer, A* recv_buffer, int size, int nprocs, MPI_Comm comm) {
+    MPI_Allgather(send_buffer, size*sizeof(A), MPI_BYTE, recv_buffer, size*sizeof(A), MPI_BYTE, comm);
+  }
 };
