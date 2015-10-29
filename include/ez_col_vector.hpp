@@ -99,4 +99,13 @@ namespace mpiez {
     delete[] counts;
     delete[] displs;
   }
+  
+  template<typename A>
+  void ez_allgather(std::vector<A>& send_buffer, std::vector<A>& recv_buffer, int nprocs, MPI_Comm comm) {
+    int send_size = send_buffer.size();
+    int tot_size = nprocs*send_size;
+    if(recv_buffer.size() < tot_size)
+      recv_buffer.resize(tot_size);
+    MPI_Allgather(send_buffer.data(), send_size*sizeof(A), MPI_BYTE, recv_buffer.data(), send_size*sizeof(A), MPI_BYTE, comm);
+  }
 };

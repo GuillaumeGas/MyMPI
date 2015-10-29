@@ -61,6 +61,10 @@ namespace mpiez {
       ez_gatherv(root_pid, send_buffer, recv_buffer, tot_size, m_pid, m_nprocs, m_comm);
     }
 
+    void allgather(A& send_buffer, A& recv_buffer) {
+      ez_allgather(send_buffer, recv_buffer, m_nprocs, m_comm);
+    }
+
     MPI_Comm m_comm;
     int m_pid;
     int m_nprocs;
