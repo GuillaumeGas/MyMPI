@@ -51,6 +51,8 @@ namespace mpiez {
       recv_size += 1;
     recv_buffer.resize(recv_size);
     MPI_Scatterv(send_buffer.data(), counts, displs, MPI_BYTE, recv_buffer.data(), recv_size*sizeof(A), MPI_BYTE, root_pid, comm); 
+    delete[] counts;
+    delete[] displs;
   }
 
   template <typename A>
@@ -94,5 +96,7 @@ namespace mpiez {
       send_size += 1;
     
     MPI_Gatherv(send_buffer.data(), send_size*sizeof(A), MPI_BYTE, recv_buffer.data(), counts, displs, MPI_BYTE, root_pid, comm); 
+    delete[] counts;
+    delete[] displs;
   }
 };

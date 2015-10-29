@@ -53,8 +53,8 @@ namespace mpiez {
       ez_send_recv(pid_proc_send, pid_proc_recv, buffer_send, buffer_recv, TAG, m_comm, m_status, send_size, recv_size);
     }
 
-    void send_recv(int pid_proc_send, int pid_proc_recv, T* buffer_send, int size_send, T* buffer_recv, int size_recv) {
-      ez_send_recv(pid_proc_send, pid_proc_recv, buffer_send, size_send, buffer_recv, size_recv);
+    void send_recv(int pid_proc_send, int pid_proc_recv, T* send_buffer, T* recv_buffer, int send_size, int recv_size) {
+      ez_send_recv(pid_proc_send, pid_proc_recv, send_buffer, send_size, recv_buffer, recv_size, TAG, m_comm, m_status);
     }
 
     void send_recv_replace(int pid_proc_send, int pid_proc_recv, T& buffer) {

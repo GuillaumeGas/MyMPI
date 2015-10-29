@@ -1,0 +1,1 @@
+/home/guidono/Documents/prog/C++/mpiez/examples/tri_array/.build/CMakeFiles/mmpi.dir
