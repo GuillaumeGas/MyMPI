@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
 
-#define __cpp98_version__
-
 #include <mpiez/include/Mpiez.hpp>
 
 using namespace std;
@@ -17,20 +15,21 @@ struct Proc : Process<Prot> {
   Proc(Prot & p) : Process(p) {}
 
   void routine() {
-    int a;
+    int a[4];
     if(proto.pid == 0) {
-      a = 2;
-      proto.m.send(1, a);
-      a = 3;
+      for(int i=0;i<4;i++) { a[i]=i;}
+      proto.m.send(1, a, 4);
+      a[0]=1;
     } else {
-      proto.m.recv(0, a);
+      proto.m.recv(0, a, 4);
     }
-    test(a);
+    test(a, 4);
   }
 
-  void test(int a) {
+  void test(int *a, int size) {
     global::barrier(MPI_COMM_WORLD);
-    cout << "Je suis " << proto.pid << " : " << a << endl;
+    cout << "Je suis " << proto.pid << " : ";
+    for(int i = 0; i < size; i++) { cout << a[i] << ", "; } cout << endl;
     global::barrier(MPI_COMM_WORLD);
   }
 };
