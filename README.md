@@ -67,19 +67,12 @@ int main(int argc, char ** argv) {
 # Collective communications
 * bcast
 * scatter
+* scatterv
 * gather
+* gatherv
 
-Type of data allowed : int, char, string, vector<int>, vector<char>
-If you want to use int* or char*, you have to add the following define before including Mpiez.hpp : 
-
-```
-#!C++
-
-#define __cpp98_version__ 
-```
-
-
-[!] : if you use this define, you can't use the vector type anymore.
+Type of data allowed : int, char, string, int* (char*, float*..) ...
+Vectors (vector<int>, vector<char>...) are allowed with C++11 and superior.
 
 # Point to point communications
 * MPI_Sendrecv_replace (STRING)
@@ -93,8 +86,6 @@ If you want to use int* or char*, you have to add the following define before in
 * MPI_Alltoall
 * MPI_Reduce
 * MPI_Allreduce
-* MPI_Scatterv
-* MPI_Gatherv
 * MPI_Allgatherv
 * MPI_Alltoallv
 
