@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 
-#include <mpiez/include/Mpiez.hpp>
+#include <mpiez/include/mpiez.hpp>
 
 using namespace std;
 using namespace mpiez;

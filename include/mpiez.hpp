@@ -4,11 +4,11 @@
 #include <vector>
 #include <mpi.h>
 
-#include <mpiez/include/Protocol.hpp>
-#include <mpiez/include/Process.hpp>
-#include <mpiez/include/Globals.hpp>
-#include <mpiez/include/Message.hpp>
-#include <mpiez/include/CollectiveMessage.hpp>
+#include <mpiez/include/ez_protocol.hpp>
+#include <mpiez/include/ez_process.hpp>
+#include <mpiez/include/ez_global.hpp>
+#include <mpiez/include/ez_message.hpp>
+#include <mpiez/include/ez_col_message.hpp>
 
 using namespace std;
 

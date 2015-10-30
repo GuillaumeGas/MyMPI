@@ -1,30 +1,30 @@
 #include <iostream>
 #include <vector>
 
-#include <mpiez/include/Mpiez.hpp>
+#include <mpiez/include/mpiez.hpp>
 
 using namespace std;
 using namespace mpiez;
 
 struct Prot : Protocol {
   Prot(int pid, int nprocs) : Protocol(pid, nprocs) {}
-  ColMessage<vector<int> > m;
+  ColMessage<int> m;
 };
 
 struct Proc : Process<Prot> {
   Proc(Prot & p) : Process(p) {}
 
   void routine() {
-    vector<int> a = {1, 2, 3};
-    vector<int> b;
-    proto.m.allgather(a, b);
+    int a[5] = {1, 2, 3, 4, 5};
+    int b[10];
+    proto.m.allgather(a, b, 5);
     test(b);
   }
 
-  void test(vector<int>& a) {
+  void test(int* a) {
     global::barrier(MPI_COMM_WORLD);
     cout << "Je suis " << proto.pid << " : ";
-    for(auto i : a) { cout << i << ", "; } cout << endl;
+    for(int i = 0; i < 10; i++) { cout << a[i] << ", "; } cout << endl;
     global::barrier(MPI_COMM_WORLD);
   }
 };

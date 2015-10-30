@@ -1,8 +1,6 @@
 #include <iostream>
 
-#define __cpp98_version__
-
-#include <mpiez/include/Mpiez.hpp>
+#include <mpiez/include/mpiez.hpp>
 
 using namespace std;
 using namespace mpiez;
