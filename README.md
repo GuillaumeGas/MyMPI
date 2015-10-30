@@ -82,7 +82,6 @@ Vectors (vector<int>, vector<char>...) are allowed with C++11 and superior.
 * MPI_Ibsend
 
 # Collective communications
-* MPI_Allgather
 * MPI_Alltoall
 * MPI_Reduce
 * MPI_Allreduce
