@@ -9,7 +9,7 @@ namespace mpiez {
     }
 
     template <typename A, typename T>
-    void blockExec(A* ptr, void (A::*fct)(T), T value, MPI_Comm comm = MPI_COMM_WORLD) {
+    void syncExec(A* ptr, void (A::*fct)(T), T value, MPI_Comm comm = MPI_COMM_WORLD) {
       int pid;
       int nprocs;
       MPI_Comm_rank(comm, &pid);
