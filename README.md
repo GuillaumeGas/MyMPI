@@ -11,7 +11,7 @@ The main goal of this C++ library is to allow to use the MPI library easily.
 #include <iostream>
 #include <vector>
 
-#include <mpiez/include/Mpiez.hpp>
+#include <mpiez/include/mpiez.hpp>
 
 using namespace std;
 using namespace mpiez;
@@ -82,28 +82,8 @@ Vectors (vector<int>, vector<char>...) are allowed with C++11 and superior.
 * MPI_Ibsend
 
 # Collective communications
-* MPI_Allgather
 * MPI_Alltoall
 * MPI_Reduce
 * MPI_Allreduce
 * MPI_Allgatherv
 * MPI_Alltoallv
-
-# Global methods
-* MPI_Test        //we should use it if Irecv returns a *request
-* MPI_Testall
-* MPI_Testany
-* MPI_Wait
-* MPI_Waitall
-* MPI_Waitany
-
-# Communicators
-* MPI_Comm_split
-* MPI_Comm_rank
-* MPI_Cart_create
-* MPI_Cart_rank
-* MPI_Cart_coord
-* MPI_Cart_shift
-* MPI_Cart_get
-* MPI_Cartdim_get
-* MPI_Cart_sub
