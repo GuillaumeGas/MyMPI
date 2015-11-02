@@ -8,6 +8,21 @@ namespace mpiez {
       MPI_Barrier(comm);
     }
 
+    template <typename A, typename T>
+    void blockExec(A* ptr, void (A::*fct)(T), T value, MPI_Comm comm = MPI_COMM_WORLD) {
+      int pid;
+      int nprocs;
+      MPI_Comm_rank(comm, &pid);
+      MPI_Comm_size(comm, &nprocs);
+      barrier(comm);
+      for(int i = 0; i < nprocs; i++) {
+	if(i == pid) {
+	  (ptr->*fct)(value);
+	}
+        barrier(comm);
+      }
+    }
+
     void test(MPI_Request* req, int* flag, MPI_Status* status) {
       MPI_Test(req, flag, status);
     }
@@ -31,4 +46,5 @@ namespace mpiez {
     void wait_all(int count, MPI_Request* array_of_req, MPI_Status* array_of_status) {
       MPI_Waitall(count, array_of_req, array_of_status);
     }
+  };
 };
