@@ -14,6 +14,7 @@ struct Prot : Protocol {
 };
 
 struct Proc : Process<Prot> {
+  bool asynchrone;
   MPI_Comm Default_comm;
   MPI_Comm Comm_grille;
   int n;
@@ -25,6 +26,14 @@ struct Proc : Process<Prot> {
 
   Proc(Prot & p, int argc, char** argv) : Process(p, argc, argv) {
     n = atoi(argv[1]);
+    if(argc > 2) {
+      asynchrone = true;
+      if(proto.pid == 0) cout << "[SYNCHRONE MODE]" << endl;
+    } else {
+      asynchrone = false;
+      if(proto.pid == 0) cout << "[ASYNCHRONE MODE]" << endl;
+    }
+    
     ndims = 2;
     reorder = true;
     periods[0] = periods[1] = 1;
@@ -54,21 +63,54 @@ struct Proc : Process<Prot> {
 
     int tours = sqrt(proto.nprocs);
 
-    global::syncExec(this, &Proc::afficher_mat, A_local);
-    global::syncExec(this, &Proc::afficher_mat, B_local);
+    //    global::syncExec(this, &Proc::afficher_mat, A_local);
+    //    global::syncExec(this, &Proc::afficher_mat, B_local);
 
     shift_init();
 
     MPI_Request reqSA, reqSB, reqRA, reqRB;
     MPI_Status status;
-    
-    for(int i = 0; i < tours; i++) {
-      operation_elementaire(n, A_local, B_local, C_local);
-      ishift(reqSA, reqSB, reqRA, reqRB);
+    int* tmp_a;
+    int* tmp_b;
+    if(asynchrone) {
+      tmp_a = new int[n*n];      
+      tmp_b = new int[n*n];
     }
 
-    global::syncExec(this, &Proc::afficher_mat, C_local);
+    clock_t t1, t2;
+    t1 = clock();
+
+    for(int i = 0; i < tours; i++) {
+      operation_elementaire(n, A_local, B_local, C_local);
+      if(asynchrone) {
+	ishift(tmp_a, tmp_b, reqSA, reqSB, reqRA, reqRB);
+
+	global::wait(&reqRA, &status);
+	global::wait(&reqRB, &status);
+      
+	//	delete[] A_local;
+	//delete[] B_local;
+	A_local = tmp_a;
+	B_local = tmp_b;
+      } else {
+	shift();
+      }
+    }
+
+    //    global::syncExec(this, &Proc::afficher_mat, C_local);
+
+    global::barrier(MPI_COMM_WORLD);
+    if(proto.pid == 0) {
+      float temps;
+      t2 = clock();
+      temps = (float)(t2-t1)/CLOCKS_PER_SEC;
+      cout << "Temps : " << temps << endl;
+    }
     
+    if(asynchrone) {
+      //      delete[] tmp_a;
+      //delete[] tmp_b;
+    }
   } 
 
 
@@ -91,28 +133,17 @@ struct Proc : Process<Prot> {
     proto.m.send_recv_replace(hb[0], hb[1], B_local, n*n);
   }
 
-  void ishift(MPI_Request& reqSA, MPI_Request& reqSB, MPI_Request& reqRA, MPI_Request& reqRB) {
+  void ishift(int* a_tmp, int* b_tmp, MPI_Request& reqSA, MPI_Request& reqSB, MPI_Request& reqRA, MPI_Request& reqRB) {
     int gd[2]; //gauche droite
     int hb[2]; //haut bas
     comm::cart_shift(Comm_grille, 0, -1, &hb[1], &hb[0]);
     comm::cart_shift(Comm_grille, 1, -1, &gd[1], &gd[0]);
 
-    int* a_tmp = new int[n*n];
-    int* b_tmp = new int[n*n];
-
     proto.m.issend(gd[0], A_local, n*n, &reqSA);
-    proto.m.irecv(gd[1], a_tmp, n*n, &reqRA);
-
     proto.m.issend(hb[0], B_local, n*n, &reqSB);
-    proto.m.irecv(hb[1], b_tmp, n*n, &reqRB);
-    
-    global::wait(&reqRA, &status);
-    global::wait(&reqRB, &status);
 
-    delete[] A_local;
-    delete[] B_local;
-    A_local = a_tmp;
-    B_local = b_tmp;
+    proto.m.irecv(gd[1], a_tmp, n*n, &reqRA);
+    proto.m.irecv(hb[1], b_tmp, n*n, &reqRB);    
   }
 
   void afficher_mat(int* mat) {
