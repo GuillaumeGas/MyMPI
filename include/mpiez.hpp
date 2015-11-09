@@ -9,6 +9,7 @@
 #include <mpiez/include/ez_global.hpp>
 #include <mpiez/include/ez_message.hpp>
 #include <mpiez/include/ez_col_message.hpp>
+#include <mpiez/include/ez_comm.hpp>
 
 using namespace std;
 
@@ -26,9 +27,7 @@ namespace mpiez {
 	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
       
 	m_prot = new A(pid, nprocs);
-	m_proc = new T(*m_prot);
-	m_proc->argc = argc;
-	m_proc->argv = argv;
+	m_proc = new T(*m_prot, argc, argv);
 
 	m_proc->routine(); 
       }
