@@ -41,12 +41,20 @@ namespace mpiez {
       ez_bsend(pid_proc, data, size, TAG, m_comm);
     }
 
+    void issend(int pid_proc, T* data, int size, MPI_Request* req) {
+      ez_issend(pid_proc, data, size, TAG, m_comm, req);
+    }
+
     void recv(int pid_proc, T & buffer) {
       ez_recv(pid_proc, buffer, TAG, m_comm, m_status);
     }
 
     void recv(int pid_proc, T* buffer, int size) {
       ez_recv(pid_proc, buffer, size, TAG, m_comm, m_status);
+    }
+
+    void irecv(int pid_proc, T* buffer, int size, MPI_Request* req) {
+      ez_irecv(pid_proc, buffer, size, TAG, m_comm, req);
     }
     
     void send_recv(int pid_proc_send, int pid_proc_recv, T& buffer_send, T& buffer_recv) {
