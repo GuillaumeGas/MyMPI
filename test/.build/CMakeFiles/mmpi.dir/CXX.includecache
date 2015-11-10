@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/etud/guillaume.gas/Documents/prog/C++/mpiez/test/main.cpp
+iostream
+-
+vector
+-
+mpiez/include/mpiez.hpp
+-
+

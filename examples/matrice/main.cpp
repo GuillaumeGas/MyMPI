@@ -28,10 +28,10 @@ struct Proc : Process<Prot> {
     n = atoi(argv[1]);
     if(argc > 2) {
       asynchrone = true;
-      if(proto.pid == 0) cout << "[SYNCHRONE MODE]" << endl;
+      if(proto.pid == 0) cout << "[ASYNCHRONE MODE]" << endl;
     } else {
       asynchrone = false;
-      if(proto.pid == 0) cout << "[ASYNCHRONE MODE]" << endl;
+      if(proto.pid == 0) cout << "[SYNCHRONE MODE]" << endl;
     }
     
     ndims = 2;

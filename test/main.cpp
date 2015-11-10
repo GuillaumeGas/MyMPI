@@ -15,7 +15,8 @@ struct Proc : Process<Prot> {
   Proc(Prot & p) : Process(p) {}
 
   void routine() {
-    global::syncExec(this, &Proc::test, 2);
+    int a = 2;
+    global::syncExec([](int a){cout << a << endl; }, a);
   }
 
   void test(int a) {

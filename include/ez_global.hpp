@@ -23,6 +23,20 @@ namespace mpiez {
       }
     }
 
+    void syncExec(void (*fct)(), MPI_Comm comm = MPI_COMM_WORLD) {
+      int pid;
+      int nprocs;
+      MPI_Comm_rank(comm, &pid);
+      MPI_Comm_size(comm, &nprocs);
+      barrier(comm);
+      for(int i = 0; i < nprocs; i++) {
+	if(i == pid) {
+	  (*fct)();
+	}
+        barrier(comm);
+      }
+    }
+
     void test(MPI_Request* req, int* flag, MPI_Status* status) {
       MPI_Test(req, flag, status);
     }
