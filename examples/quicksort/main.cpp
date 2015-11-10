@@ -31,22 +31,28 @@ struct Proc : Process<Prot> {
 
     get_pivot();
 
-    int inf = 0;
-    int sup = 0;
+    /* On va chercher le nombre d'éléments <= pivot et > pivot */
+    int inf;
+    int sup;
     get_inf_sup(inf,sup);
 
-    int inf_less_me = 0;
-    int sum_inf_less_me = 0;
+    /* On récupère le nombre d'éléments plus petits présents avant le proc courant */
+    int inf_less_me;
+    int sum_inf; //somme éléments plus <= pivot avant proc + elements plus petit proc
     get_inf_less_me(inf, inf_less_me);
-    sum_inf_less_me = inf_less_me+inf;
+    sum_inf = inf_less_me+inf;
     //get_sup
 
     /* On détermine à qui on va envoyer les plus petits éléments */
     int proc_recv;
-    if(sum_inf_less_me%n == 0) {
-      proc_recv = (sum_inf_less_me/n)-1;
+    if(proto.pid == 0) {
+      proc_recv = 0;
     } else {
-      proc_recv = (sum_inf_less_me/n)+1;
+      if(inf_less_me%n == 0 && inf_less_me != n) {
+	proc_recv = (inf_less_me/n)-1;
+      } else {
+	proc_recv = inf_less_me/n;
+      }
     }
 
     cout << "Je suis " << proto.pid << " et j'envoie à " << proc_recv << endl;
