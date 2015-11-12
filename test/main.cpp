@@ -8,20 +8,31 @@ using namespace mpiez;
 
 struct Prot : Protocol {
   Prot(int pid, int nprocs) : Protocol(pid, nprocs) {}
-  ColMessage<int> m;
+  Message<0,int> m;
 };
 
 struct Proc : Process<Prot> {
-  Proc(Prot & p) : Process(p) {}
+  Proc(Prot & p, int argc, char** argv) : Process(p, argc, argv) {}
 
   void routine() {
-    int a = 2;
-    global::syncExec([](int a){cout << a << endl; }, a);
+    MPI_Request r1, r2;
+    MPI_Status s1,s2;
+
+    int a = 0;
+    if(proto.pid == 0) {
+      a = 1;
+      proto.m.ibsend(1,&a,1,&r1);
+      global::wait(&r1,&s1);
+      a = 2;
+    } else {
+      proto.m.irecv(0,a,&r2);
+      global::wait(&r2,&s2);
+    }
+
+   
+    cout << "Je suis " << proto.pid << " : " << a << endl;
   }
 
-  void test(int a) {
-    cout << a << endl;
-  }
 };
 
 int main(int argc, char ** argv) {

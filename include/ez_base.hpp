@@ -39,4 +39,24 @@ namespace mpiez {
   void ez_send_recv_replace(int pid_proc_send, int pid_proc_recv, A& data, int tag, MPI_Comm comm, MPI_Status& status) {
     MPI_Sendrecv_replace(&data, sizeof(A), MPI_BYTE, pid_proc_send, tag, pid_proc_recv, tag, comm, &status);
   }
+
+  template<typename A>
+  void ez_isend(int pid_proc, A* data, int size, int tag, MPI_Comm comm, MPI_Request* req) {
+    MPI_Isend(data, size*sizeof(A), MPI_BYTE, pid_proc, tag, comm, req);
+  }
+
+  template<typename A>
+  void ez_issend(int pid_proc, A* data, int size, int tag, MPI_Comm comm, MPI_Request* req) {
+    MPI_Issend(data, size*sizeof(A), MPI_BYTE, pid_proc, tag, comm, req);
+  }
+
+  template<typename A>
+  void ez_ibsend(int pid_proc, A* data, int size, int tag, MPI_Comm comm, MPI_Request* req) {
+    MPI_Ibsend(data, size*sizeof(A), MPI_BYTE, pid_proc, tag, comm, req);
+  }
+
+  template<typename A>
+  void ez_irecv(int pid_proc, A* data, int size, int tag, MPI_Comm comm, MPI_Request* req) {
+    MPI_Irecv(data, size*sizeof(A), MPI_BYTE, pid_proc, tag, comm, req);
+  }
 };

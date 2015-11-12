@@ -25,19 +25,10 @@ namespace mpiez {
     delete buffer;
   }
 
-  template<typename A>
-  void ez_issend(int pid_proc, A* data, int size, int tag, MPI_Comm comm, MPI_Request* req) {
-    MPI_Issend(data, size*sizeof(A), MPI_BYTE, pid_proc, tag, comm, req);
-  }
   
   template<typename A>
   void ez_recv(int pid_proc, A* data, int size, int tag, MPI_Comm comm, MPI_Status& status) {
     MPI_Recv(data, size*sizeof(A), MPI_BYTE, pid_proc, tag, comm, &status);
-  }
-
-  template<typename A>
-  void ez_irecv(int pid_proc, A* data, int size, int tag, MPI_Comm comm, MPI_Request* req) {
-    MPI_Irecv(data, size*sizeof(A), MPI_BYTE, pid_proc, tag, comm, req);
   }
 
   template<typename A>
