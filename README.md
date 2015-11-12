@@ -61,6 +61,9 @@ int main(int argc, char ** argv) {
 * send
 * ssend
 * bsend
+* isend
+* issend
+* (ibsend, error...)
 * send_recv
 * send_recv_replace
 
@@ -74,14 +77,10 @@ int main(int argc, char ** argv) {
 Type of data allowed : int, char, string, int* (char*, float*..) ...
 Vectors (vector<int>, vector<char>...) are allowed with C++11 and superior.
 
-# Point to point communications
+# TODO : Point to point communications
 * MPI_Sendrecv_replace (STRING)
-* MPI_Isend
-* MPI_Irecv
-* MPI_Issend
-* MPI_Ibsend
 
-# Collective communications
+# TODO : Collective communications
 * MPI_Alltoall
 * MPI_Reduce
 * MPI_Allreduce
