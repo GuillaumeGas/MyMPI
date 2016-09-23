@@ -5,8 +5,7 @@ The main goal of this C++ library is to allow to use the MPI library easily.
 ### Example ###
 
 
-```
-#!C++
+```C++
 
 #include <iostream>
 #include <vector>
